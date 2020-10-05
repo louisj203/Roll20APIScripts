@@ -1,0 +1,12 @@
+{
+  "name": "Exp_01",
+  "version": "0.0.3",
+  "description": "Currently just says version and last update when installed.",
+  "authors": "GM Lou-T",
+  "roll20userid": "2990909",
+  "dependencies": [],
+  "modifies": [],
+  "conflicts": [],
+  "script": "Exp_01.js",
+  "useroptions": {}
+}
