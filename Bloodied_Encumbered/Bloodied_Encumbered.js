@@ -6,7 +6,7 @@ var LogVersionLastUpdate = LogVersionLastUpdate || (function() {
     'use strict';
 
     var version = '0.0.1',
-        lastUpdate = 2010050630,
+        lastUpdate = 2010050647,
 
     checkInstall = function() {    
         log('Bloodied_Encumbered Install Info: v'+version+' [lastUpdate: '+lastUpdate+']');
@@ -21,6 +21,6 @@ var LogVersionLastUpdate = LogVersionLastUpdate || (function() {
 on('ready',function() {
     'use strict';
 
-    TheReturnName.CheckInstall();
+    LogVersionLastUpdate.TheReturnName();
 
 });
