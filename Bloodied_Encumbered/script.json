@@ -8,7 +8,7 @@
     "roll20userid": "2990909",
     "dependencies": [],
     "modifies": {
-        "custfx": "read,write",   // WHATS THIS?
+        "custfx": "read,write",   /* WHATS THIS? */
         "state.Bloodied_Encumbered": "read,write",
         // "token.tint/transparency" : "read,write",
         // "token.statusmarkers" : "read, write",
