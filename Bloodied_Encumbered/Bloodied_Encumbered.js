@@ -3,6 +3,11 @@
 // Contact:  https://app.roll20.net/users/2990909/lou-t
 // Based on: https://github.com/dxwarlock/Roll20/blob/master/Public/HeathColors
 
+// Script Description: This script will visually aid in tracking health and encumberance levels (PCs only for encumberance) for tokens
+//   by using a yellow tint when the token is at or below 33% health, a 'Bloodied' status marker when the token is at or below 50% health, a red tint
+//   when the token is at or below 66%, and the 'Dead X' status marker when the token is at zero health. It will also display a status marker as
+//   appropriate for 'Encumbered', 'Heavily Encumbered', and '?? TOO MUCH'.
+
 /* global createObj TokenMod spawnFxWithDefinition getObj state playerIsGM sendChat _ findObjs log on */
 /* jshint bitwise: false */
 
@@ -12,24 +17,25 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
     var version = '0.1.0',
         ScriptName = "Bloodied_Encumbered",
         schemaVersion = '1.0.1',
-        lastUpdated = 2010050830,
+        lastUpdated = 2010051730,
         
         // ON TOKEN CHANGE OR CREATE
         handleToken = function (obj, prev, update) {
-            // Check existance of state and create default if needed. Needed because when copying games state is not copied and handleToken is called before CheckInstall
+            
+            // Check existance of state and create default if needed. When copying games, state is not copied and handleToken is called before CheckInstall
             if(state.Bloodied_Encumbered === undefined)
             {
                 log(ScriptName + " " + version + " state is missing, reverting to default state");
                 Bloodied_Encumbered.CheckInstall();
             }
             
-            // CHECK IF TRIGGERED ** NEED TO FIGURE THIS PART OUT **
-            // if(state.Bloodied_Encumbered.?? !== true || obj.get("layer") !== "objects") return;
+            // CHECK IF NO ACTION NEEDED
+            if(state.Bloodied_Encumbered !== true || obj.get("layer") !== "objects") return;
            
             // CHECK BARS
-            if(obj.get("represents") !== "" || (obj.get("represents") === "" && state.HealthColors.OneOff === true)) {
+            if(obj.get("represents") !== "" || (obj.get("represents") === "" && state.Bloodied_Encumbered.OneOff === true)) {
     
-                var barUsed = state.HealthColors.auraBar;
+                var barUsed = state.Bloodied_Encumbered.auraBar;
                 var maxValue, curValue, prevValue;
                 if(obj.get(barUsed + "_max") !== "" || obj.get(barUsed + "_value") !== "") {
                     maxValue = parseInt(obj.get(barUsed + "_max"), 10);
@@ -47,7 +53,7 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
                 var GM = '',PC = '';
                 var IsTypeOn, PercentOn, ShowDead, UseAura;
                 
-                // *CHECK MONSTER OR PLAYER*
+                // *CHECK NPC OR PLAYER*
                 var oCharacter = getObj('character', obj.get("_represents"));
                 var type = (oCharacter === undefined || oCharacter.get("controlledby") === "") ? 'Monster' : 'Player';
                 var colortype = (state.HealthColors.auraTint) ? 'tint' : 'aura1';
@@ -260,11 +266,11 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
 
         // *FUNCTIONS*
         
-        // SET TOKEN COLORS
-        TokenSet = function (obj, sizeSet, markerColor, pColor, update) {
-            var Pageon = getObj("page", obj.get("_pageid"));
-            var scale = Pageon.get("scale_number") / 10;
-            if(state.HealthColors.auraTint === true) {
+        // SET TOKEN TINT COLOR
+        TokenSetTint = function (obj, sizeSet, markerColor, pColor, update) {
+            var CurrentPage = getObj("page", obj.get("_pageid"));
+            var scale = CurrentPage.get("scale_number") / 10;
+            if(state.Bloodied_Encumbered.TokenTint === true) {
                 if(obj.get('aura1_color') == markerColor && update === "YES") {
                     obj.set({'aura1_color': "transparent",'aura2_color': "transparent",});
                 }
@@ -285,9 +291,33 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
             }
         },
         
-        // REMOVE ALL
-        SetAuraNone = function (obj) {
-            if(state.HealthColors.auraTint === true) obj.set({'tint_color': "transparent",});
+        // SET TOKEN STATUS MARKER(s)
+        TokenSet = function (obj, sizeSet, markerColor, pColor, update) {
+            var CurrentPage = getObj("page", obj.get("_pageid"));
+            var scale = CurrentPage.get("scale_number") / 10;
+            if(state.HealthColors.auraTint === true) {
+                if(obj.get('aura1_color') == markerColor && update === "YES") {
+                    obj.set({'aura1_color': "transparent",'aura2_color': "transparent",});
+                }
+                obj.set({'tint_color': markerColor,});
+            }
+            else {
+                if(obj.get('tint_color') == markerColor && update === "YES") {
+                    obj.set({'tint_color': "transparent",});
+                }
+                obj.set({
+                    'aura1_radius': sizeSet * scale * 1.8,
+                    'aura2_radius': sizeSet * scale * 0.1,
+                    'aura1_color': markerColor,
+                    'aura2_color': pColor,
+                    'showplayers_aura1': true,
+                    'showplayers_aura2': true,
+                });
+            }
+        },        
+        // REMOVE ALL 
+        SetTintNone = function (obj) {
+            if(state.Bloodied_Encumbered.auraTint === true) obj.set({'tint_color': "transparent",});
             else obj.set({'aura1_color': "transparent",'aura2_color': "transparent",});
         },
         
