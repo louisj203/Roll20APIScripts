@@ -15,8 +15,7 @@ var SayHello = SayHello || (function() {
     },
 
     return {
-        CheckInstall: checkInstall,
-        RegisterEventHandlers: registerEventHandlers
+        CheckInstall: checkInstall
     };
 
 }());
