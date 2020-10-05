@@ -1,7 +1,7 @@
 {
   "name": "Bloodied_Encumbered",
-  "version": "0.0.3",
-  "description": "Currently just says version and last update when installed.",
+  "version": "0.1.0",
+  "description": "Building upon an existing health tracking script...",
   "authors": "GM Lou-T",
   "roll20userid": "2990909",
   "dependencies": [],
