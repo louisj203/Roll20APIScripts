@@ -1,0 +1,12 @@
+{
+  "name": "Bloodied_Encumbered",
+  "version": "0.0.1",
+  "description": "Currently just says version and last update when installed.",
+  "authors": "GM Lou-T",
+  "roll20userid": "2990909",
+  "dependencies": [],
+  "modifies": [],
+  "conflicts": [],
+  "script": "Bloodied_Encumbered.js",
+  "useroptions": {}
+}
