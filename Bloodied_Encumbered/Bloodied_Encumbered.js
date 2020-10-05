@@ -10,9 +10,7 @@ var SayHello = SayHello || (function() {
 
     checkInstall = function() {    
         log('-=> SayHello v'+version+' <=-  [lastUpdate: '+lastUpdate+']');
-	},
-
-    },
+    };
 
     return {
         CheckInstall: checkInstall
