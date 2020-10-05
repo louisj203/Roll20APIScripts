@@ -4,7 +4,6 @@
     "version": "0.1.0",
     "previousversions": [],
     "description": "Script to set Bloodied (yellow tint), NearDeath (red tint), NoHealth (the X), Encumbered / HeavilyEncumbered / OverEncumbered (chosen token markers)"
-    "authors": "GM Lou-T",
     "roll20userid": "2990909",
     "dependencies": [],
     "modifies": {
