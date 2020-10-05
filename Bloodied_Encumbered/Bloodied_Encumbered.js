@@ -3,8 +3,8 @@
 // Contact:  https://app.roll20.net/users/2990909/lou-t
 // Based on: https://github.com/dxwarlock/Roll20/blob/master/Public/HeathColors
 
-/* global createObj TokenMod spawnFxWithDefinition getObj state playerIsGM sendChat _ findObjs log on*/
-/*jshint bitwise: false*/
+/* global createObj TokenMod spawnFxWithDefinition getObj state playerIsGM sendChat _ findObjs log on */
+/* jshint bitwise: false */
 
 var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
     'use strict';
@@ -14,19 +14,21 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
         schemaVersion = '1.0.1',
         lastUpdated = 2010050830,
         
-// ON TOKEN CHANGE OR CREATE
-
+        // ON TOKEN CHANGE OR CREATE
         handleToken = function (obj, prev, update) {
             // Check existance of state and create default if needed. Needed because when copying games state is not copied and handleToken is called before CheckInstall
-            if(state.HealthColors === undefined)
+            if(state.Bloodied_Encumbered === undefined)
             {
                 log(ScriptName + " " + version + " state is missing, reverting to default state");
-                HealthColors.CheckInstall();
-            }                    
-            //CHECK IF TRIGGERED------------
-            if(state.HealthColors.auraColorOn !== true || obj.get("layer") !== "objects") return;
+                Bloodied_Encumbered.CheckInstall();
+            }
+            
+            // CHECK IF TRIGGERED ** NEED TO FIGURE THIS PART OUT **
+            // if(state.Bloodied_Encumbered.?? !== true || obj.get("layer") !== "objects") return;
+           
+            // CHECK BARS
             if(obj.get("represents") !== "" || (obj.get("represents") === "" && state.HealthColors.OneOff === true)) {
-    //**CHECK BARS------------//
+    
                 var barUsed = state.HealthColors.auraBar;
                 var maxValue, curValue, prevValue;
                 if(obj.get(barUsed + "_max") !== "" || obj.get(barUsed + "_value") !== "") {
@@ -35,18 +37,22 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
                     prevValue = prev[barUsed + "_value"];
                 }
                 if(isNaN(maxValue) || isNaN(curValue) || isNaN(prevValue)) return;
-            //CALC PERCENTAGE------------
+                
+                // CALC PERCENTAGE
                 var percReal = Math.round((curValue / maxValue) * 100);
                 var markerColor = PercentToHEX(percReal);
-            //DEFINE VARIABLES---
+                
+                // DEFINE VARIABLES
                 var pColor = '#ffffff';
                 var GM = '',PC = '';
                 var IsTypeOn, PercentOn, ShowDead, UseAura;
-        //**CHECK MONSTER OR PLAYER------------//
+                
+                // *CHECK MONSTER OR PLAYER*
                 var oCharacter = getObj('character', obj.get("_represents"));
                 var type = (oCharacter === undefined || oCharacter.get("controlledby") === "") ? 'Monster' : 'Player';
                 var colortype = (state.HealthColors.auraTint) ? 'tint' : 'aura1';
-            //IF PLAYER------------
+                
+                // IF PLAYER
                 if(type == 'Player') {
                     GM = state.HealthColors.GM_PCNames;
                     PC = state.HealthColors.PCNames;
@@ -58,7 +64,8 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
                     pColor = '#000000';
                     if(player !== undefined) pColor = player.get('color');
                 }
-            //IF MONSTER------------
+                
+                // IF MONSTER
                 else if(type == 'Monster') {
                     GM = state.HealthColors.GM_NPCNames;
                     PC = state.HealthColors.NPCNames;
@@ -67,16 +74,19 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
                     ShowDead = state.HealthColors.auraDead;
                 }
                 else return;
-        //CHECK DISABLED AURA/TINT ATTRIB------------
+                
+                // CHECK DISABLED AURA/TINT ATTRIB
                 if(oCharacter !== undefined) {
                     UseAura = lookupUseColor(oCharacter);
                 }
-            //SET HEALTH COLOR----------
+                
+                // SET HEALTH COLOR
                 if(IsTypeOn && UseAura !== "NO") {
                     percReal = Math.min(percReal, 100);
                     if(percReal > PercentOn || curValue === 0) SetAuraNone(obj);
                     else TokenSet(obj, state.HealthColors.AuraSize, markerColor, pColor, update);
-            //SHOW DEAD----------
+                    
+                    // SHOW DEAD
                     if(ShowDead === true) {
                         if(curValue > 0) obj.set("status_dead", false);
                         else if(curValue < 1) {
@@ -88,11 +98,14 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
                     }
                 }
                 else if((!IsTypeOn || UseAura === "NO") && obj.get(colortype + '_color') === markerColor) SetAuraNone(obj);
-        //SET SHOW NAMES------------
+                
+                // SET SHOW NAMES
                 SetShowNames(GM,PC,obj);
-//**SPURT FX------------//
+                
+                // **SPURT FX
                 if(curValue != prevValue && prevValue != "" && update !== "YES") {
-        //CHECK BLOOD ATTRIB------------
+                    
+                    // CHECK BLOOD ATTRIB
                     var UseBlood;
                     if(oCharacter !== undefined) {
                         UseBlood = lookupUseBlood(oCharacter);
@@ -103,7 +116,8 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
                         var HitSizeCalc = Math.min((amount / maxValue) * 4, 1);
                         var Scale = obj.get("height") / 70;
                         var HitSize = Math.max(HitSizeCalc, 0.2) * (_.random(60, 100) / 100);
-            //IF HEALED------------
+                        
+                        // IF HEALED
                         if(curValue > prevValue) {
                             aFX = findObjs({_type: "custfx",name: '-DefaultHeal'}, {caseInsensitive: true})[0];
                             FX = aFX.get("definition");
@@ -111,25 +125,30 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
                             FX.startColour = HealColor;
                             FXArray.push(FX);
                         }
-            //IF HURT------------
+                        
+                        // IF HURT
                         else if(curValue < prevValue) {
                             aFX = findObjs({_type: "custfx",name: '-DefaultHurt'}, {caseInsensitive: true})[0];
                             if(aFX) FX = aFX.get("definition");
-                    //CHECK DEFAULT COLOR--
+                            
+                            // CHECK DEFAULT COLOR
                             if(UseBlood === "DEFAULT" || UseBlood === undefined) {
                                 HurtColor = HEXtoRGB(state.HealthColors.HurtFX);
                                 FX.startColour = HurtColor;
                                 FXArray.push(FX);
                             }
-                    //ELSE CHECK CUSTOM COLOR/FX--
+                            
+                            // ELSE CHECK CUSTOM COLOR/FX
                             else if(UseBlood !== "DEFAULT" && UseBlood !== undefined) {
                                 HurtColor = HEXtoRGB(UseBlood);
-                        //IF CUSTOM COLOR--
+                                
+                                // IF CUSTOM COLOR
                                 if(_.difference(HurtColor, [0, 0, 0, 0]).length !== 0) {
                                     FX.startColour = HurtColor;
                                     FXArray.push(FX);
                                     }
-                        //ELSE ASSUME CUSTOM FX--
+                                
+                                // ELSE ASSUME CUSTOM FX--
                                 else {
                                     var i = UseBlood.split(/,/);
                                     _.each(i, function (FXname) {
@@ -141,7 +160,8 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
                             }
                         }
                         else return;
-            //SPAWN FX------------
+                        
+                        // SPAWN FX
                         _.each(FXArray, function (FX) {
                             SpawnFX(Scale, HitSize, obj.get("left"), obj.get("top"), FX, obj.get("_pageid"));
                         });
@@ -149,9 +169,8 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
                 }
             }
         },
-    /*------------------------
-    CHAT MESSAGES
-    ------------------------*/
+        
+        // *CHAT MESSAGES*
         handleInput = function (msg) {
             var msgFormula = msg.content.split(/\s+/);
             var command = msgFormula[0].toUpperCase(), UPPER ="";
@@ -238,10 +257,10 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
                 }
             }
         },
-/*------------------------
-"FUNCTIONS"
-------------------------*/
-    //SET TOKEN COLORS------------
+
+        // *FUNCTIONS*
+        
+        // SET TOKEN COLORS
         TokenSet = function (obj, sizeSet, markerColor, pColor, update) {
             var Pageon = getObj("page", obj.get("_pageid"));
             var scale = Pageon.get("scale_number") / 10;
@@ -265,12 +284,14 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
                 });
             }
         },
-    //REMOVE ALL------------
+        
+        // REMOVE ALL
         SetAuraNone = function (obj) {
             if(state.HealthColors.auraTint === true) obj.set({'tint_color': "transparent",});
             else obj.set({'aura1_color': "transparent",'aura2_color': "transparent",});
         },
-    //FORCE ALL TOKEN UPDATE------------
+        
+        // FORCE ALL TOKEN UPDATE
         MenuForceUpdate = function(){
             let i = 0;
             const start = new Date().getTime();
@@ -302,7 +323,8 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
                 obj.set({'showplayers_name': PC});
             }
         },
-    //MANUAL UPDATE------------
+        
+        // MANUAL UPDATE
         manUpdate = function(msg){
             var selected = msg.selected;
             var allNames = '';
@@ -315,7 +337,8 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
             });
             GMW(allNames);
         },
-    //ATTRIBUTE CACHE------------
+        
+        // ATTRIBUTE CACHE
         makeSmartAttrCache = function (attribute, options) {
             let cache = {},
                defaultValue = options.default || 'YES',
@@ -357,91 +380,8 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
             default: 'YES',
             validation: (o)=>o.match(/YES|NO/)
         }),
-    //DEATH SOUND------------
-        PlayDeath = function (trackname) {
-          	var RandTrackName;
-            if(trackname.indexOf(",") > 0) {
-                var tracklist = trackname.split(",");
-                RandTrackName = tracklist[Math.floor(Math.random() * tracklist.length)];
-            }
-            else RandTrackName = trackname;
-            var track = findObjs({type: 'jukeboxtrack',title: RandTrackName})[0];
-            if(track) {
-                track.set('playing', false);
-                track.set('softstop', false);
-                track.set('volume', 50);
-                track.set('playing', true);
-            }
-            else {
-                log(ScriptName + ": No track found named " + RandTrackName);
-            }
-        },
-    //PERC TO RGB------------
-        PercentToHEX = function (percent) {
-            var HEX;
-            if(percent > 100) HEX = "#0000FF";
-            else {
-                if(percent === 100) percent = 99;
-                var r, g, b = 0;
-                if(percent < 50) {
-                    g = Math.floor(255 * (percent / 50));
-                    r = 255;
-                }
-                else {
-                    g = 255;
-                    r = Math.floor(255 * ((50 - percent % 50) / 50));
-                }
-                HEX = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-            }
-            return HEX;
-        },
-    //HEX TO RGB------------
-        HEXtoRGB = function (hex) {
-            let parts = (hex || '').match(/^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/);
-            if(parts) {
-                let rgb = _.chain(parts).rest().map((d) => parseInt(d, 16)).value();
-                rgb.push(1.0);
-                return rgb;
-            }
-            return [0, 0, 0, 0.0];
-        },
-    //SPAWN FX------------
-        SpawnFX = function (Scale,HitSize,left,top,FX,pageid) {
-            _.defaults(FX, {
-                "maxParticles": 100,
-                "duration": 100,
-                "size": 100,
-                "sizeRandom": 100,
-                "lifeSpan": 100,
-                "lifeSpanRandom": 100,
-                "speed": 0,
-                "speedRandom": 0,
-                "angle": 0,
-                "angleRandom": 0,
-                "emissionRate": 100,
-                "startColour": [255,255,255,1],
-                "endColour": [0,0,0,1],
-                "gravity": {"x": 0,"y": 0.0},
-            });
-            var newFX = {
-                "maxParticles": FX.maxParticles * HitSize,
-                "duration": FX.duration * HitSize,
-                "size": FX.size * Scale / 2,
-                "sizeRandom": FX.sizeRandom * Scale / 2,
-                "lifeSpan": FX.lifeSpan,
-                "lifeSpanRandom": FX.lifeSpanRandom,
-                "speed": FX.speed * Scale,
-                "speedRandom": FX.speedRandom * Scale,
-                "angle": FX.angle,
-                "angleRandom": FX.angleRandom,
-                "emissionRate": FX.emissionRate * HitSize * 2,
-                "startColour": FX.startColour,
-                "endColour": FX.endColour,
-                "gravity": {"x": FX.gravity.x * Scale,"y": FX.gravity.y * Scale},
-            };
-            spawnFxWithDefinition(left,top,newFX,pageid);
-        },
-    //HELP MENU------------
+     
+        // HELP MENU
         aurahelp = function (OPTION) {
             var Update = '';
             if(OPTION !== "MENU") Update = MenuForceUpdate();
@@ -480,14 +420,16 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
                 Update +//--
                 '</div>');
         },
-    //OFF BUTTON COLORS------------
+        
+        // OFF BUTTON COLORS
         ButtonColor = function (state, off, disable) {
             var color;
             if(state == "No") color = off;
             if(state == "Off") color = disable;
             return color;
         },
-    //CHECK INSTALL & SET STATE------------
+        
+        // CHECK INSTALL & SET STATE
         checkInstall = function () {
             log('-=>' + ScriptName + ' v' + version + ' [Updated: ' + Updated + ']<=-');
             if(!_.has(state, 'HealthColors') || state.HealthColors.schemaVersion !== schemaVersion) {
@@ -495,7 +437,8 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
                 state.HealthColors = {schemaVersion: schemaVersion};
                 state.HealthColors.version = version;
             }
-            //CHECK STATE VALUES
+            
+            // CHECK STATE VALUES
             if(_.isUndefined(state.HealthColors.auraColorOn)) state.HealthColors.auraColorOn = true; //global on or off
             if(_.isUndefined(state.HealthColors.auraBar)) state.HealthColors.auraBar = "bar1"; //bar to use
             if(_.isUndefined(state.HealthColors.auraTint)) state.HealthColors.auraTint = false; //use tint instead?
@@ -518,11 +461,13 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
             if(_.isUndefined(state.HealthColors.HealFX)) state.HealthColors.HealFX = "00FF00"; //set FX HEAL COLOR
             if(_.isUndefined(state.HealthColors.HurtFX)) state.HealthColors.HurtFX = "FF0000"; //set FX HURT COLOR?
             if(_.isUndefined(state.HealthColors.auraDeadFX)) state.HealthColors.auraDeadFX = 'None'; //Sound FX Name
-            //TokenMod CHECK
+            
+            // TokenMod CHECK
             if('undefined' !== typeof TokenMod && TokenMod.ObserveTokenChange) TokenMod.ObserveTokenChange(handleToken);
             var FXHurt = findObjs({_type: "custfx",name: "-DefaultHurt"}, {caseInsensitive: true})[0];
             var FXHeal = findObjs({_type: "custfx",name: "-DefaultHeal"}, {caseInsensitive: true})[0];
-        //DEFAULT FX CHECK
+            
+            // DEFAULT FX CHECK
             if(!FXHurt) {
                 GMW("Creating Default Hurt FX");
                 var Hurt = {
@@ -563,18 +508,21 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
                 createObj('custfx', {name: "-DefaultHeal",definition: Heal});
             }
         },
-    //WHISPER GM------------
+        
+        // WHISPER GM
         GMW = function (text) {
             var DIV = "<div style='width: 100%; border-radius: 4px;  box-shadow: 1px 1px 1px #707070; text-align: center; vertical-align: middle; padding: 3px 0px; margin: 0px auto; border: 1px solid #000; color: #000; background-image: -webkit-linear-gradient(-45deg, #a7c7dc 0%,#85b2d3 100%);";
             var MSG = DIV + "'><b>"+text+"</b></div";
             sendChat('HealthColors', "/w GM "+MSG);
         },
-    //OUTSIDE CALL------------
+        
+        // OUTSIDE CALL
         UpdateToken = function (obj, prev) {
             if (obj.get("type") === "graphic") handleToken(obj, prev);
             else GMW("Script sent non-Token to be updated!");
         },
-    //REGISTER TRIGGERS------------
+        
+        // REGISTER TRIGGERS
         registerEventHandlers = function () {
             on('chat:message', handleInput);
             on("change:token", handleToken);
@@ -586,7 +534,8 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
                 }, 400);
             });
         };
-    //RETURN OUTSIDE FUNCTIONS------------
+    
+    // RETURN OUTSIDE FUNCTIONS
     return {
         GMW: GMW,
         Update: UpdateToken,
@@ -594,7 +543,8 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
         RegisterEventHandlers: registerEventHandlers
     };
 }());
-//On Ready
+
+// On Ready
 on('ready', function () {
     'use strict';
     HealthColors.GMW("API READY");
