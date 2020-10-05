@@ -9,7 +9,7 @@ var LogVersionLastUpdate = LogVersionLastUpdate || (function() {
         lastUpdate = 2010050630,
 
     checkInstall = function() {    
-        log('Install Info: v'+version+' [lastUpdate: '+lastUpdate+']');
+        log('Bloodied_Encumbered Install Info: v'+version+' [lastUpdate: '+lastUpdate+']');
     };
 
     return {
