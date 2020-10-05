@@ -5,7 +5,7 @@
 var LogVersionLastUpdate = LogVersionLastUpdate || (function() {
     'use strict';
 
-    var version = '0.0.1',
+    var version = '0.0.2',
         lastUpdate = 2010050647,
 
     checkInstall = function() {    
