@@ -292,7 +292,7 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
         },
         
         // SET TOKEN STATUS MARKER(s)
-        TokenSet = function (obj, sizeSet, markerColor, pColor, update) {
+        TokenSetMarkers = function (obj, sizeSet, markerColor, pColor, update) {
             var CurrentPage = getObj("page", obj.get("_pageid"));
             var scale = CurrentPage.get("scale_number") / 10;
             if(state.HealthColors.auraTint === true) {
@@ -314,47 +314,15 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
                     'showplayers_aura2': true,
                 });
             }
-        },        
-        // REMOVE ALL 
-        SetTintNone = function (obj) {
+        },
+        
+        // REMOVE ALL B_E EFFECTS
+        TokenResetAll = function (obj) {
             if(state.Bloodied_Encumbered.auraTint === true) obj.set({'tint_color': "transparent",});
             else obj.set({'aura1_color': "transparent",'aura2_color': "transparent",});
         },
         
-        // FORCE ALL TOKEN UPDATE
-        MenuForceUpdate = function(){
-            let i = 0;
-            const start = new Date().getTime();
-            const barUsed = state.HealthColors.auraBar;
-            const workQueue = findObjs({type: 'graphic',subtype: 'token',layer: 'objects'})
-            		.filter((o)=>o.get(barUsed + "_max") !== "" && o.get(barUsed + "_value") !== "");
-            const drainQueue = ()=>{
-                let t = workQueue.shift();
-                if(t){
-                    const prev = JSON.parse(JSON.stringify(t));
-                    handleToken( t, prev, 'YES');
-                    setTimeout(drainQueue,0);
-                } else {
-                    sendChat('Fixing Tokens',`/w gm Finished Fixing Tokens`);
-                }
-            };
-            sendChat('Fixing Tokens',`/w gm Fixing ${workQueue.length} Tokens`);
-            drainQueue();
-            var end = new Date().getTime();
-            return "Tokens Processed: " + workQueue.length + "<br>Run time in ms: " + (end - start);
-        },
-        SetShowNames = function(GM,PC,obj) {
-            if(GM != 'Off' && GM != '') {
-                GM = (GM == "Yes") ? true : false;
-                obj.set({'showname': GM});
-            }
-            if(PC != 'Off' && PC != '') {
-                PC = (PC == "Yes") ? true : false;
-                obj.set({'showplayers_name': PC});
-            }
-        },
-        
-        // MANUAL UPDATE
+        // MANUAL UPDATE ?? WHAT DOES THIS DO?
         manUpdate = function(msg){
             var selected = msg.selected;
             var allNames = '';
@@ -368,7 +336,7 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
             GMW(allNames);
         },
         
-        // ATTRIBUTE CACHE
+        // ATTRIBUTE CACHE ?? LOST AGAIN?
         makeSmartAttrCache = function (attribute, options) {
             let cache = {},
                defaultValue = options.default || 'YES',
@@ -543,7 +511,7 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
         GMW = function (text) {
             var DIV = "<div style='width: 100%; border-radius: 4px;  box-shadow: 1px 1px 1px #707070; text-align: center; vertical-align: middle; padding: 3px 0px; margin: 0px auto; border: 1px solid #000; color: #000; background-image: -webkit-linear-gradient(-45deg, #a7c7dc 0%,#85b2d3 100%);";
             var MSG = DIV + "'><b>"+text+"</b></div";
-            sendChat('HealthColors', "/w GM "+MSG);
+            sendChat('Bloodied_Encumbered', "/w GM "+MSG);
         },
         
         // OUTSIDE CALL
@@ -577,7 +545,7 @@ var Bloodied_Encumbered = Bloodied_Encumbered || (function () {
 // On Ready
 on('ready', function () {
     'use strict';
-    HealthColors.GMW("API READY");
-    HealthColors.CheckInstall();
-    HealthColors.RegisterEventHandlers();
+    Bloodied_Encumbered.GMW("API READY");
+    Bloodied_Encumbered.CheckInstall();
+    Bloodied_Encumbered.RegisterEventHandlers();
 });
