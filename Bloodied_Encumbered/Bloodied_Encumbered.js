@@ -1,12 +1,12 @@
 // Github:   https://github.com/louisj203/Roll20APIScripts/edit/master/Bloodied_Encumbered/Bloodied_Encumbered.js
 // By:       GM Lou-T
 // Contact:  https://app.roll20.net/users/2990909/lou-t
-// Based on: https://github.com/dxwarlock/Roll20/blob/master/Public/HeathColors
+// Based heavily on: https://github.com/dxwarlock/Roll20/blob/master/Public/HeathColors
 
 // Script Description: This script will visually aid in tracking health and encumberance levels (PCs only for encumberance) for tokens
-//   by using a yellow tint when the token is at or below 33% health, a 'Bloodied' status marker when the token is at or below 50% health, a red tint
-//   when the token is at or below 66%, and the 'Dead X' status marker when the token is at zero health. It will also display a status marker as
-//   appropriate for 'Encumbered', 'Heavily Encumbered', and '?? TOO MUCH'.
+//   by using a yellow tint when the token is at or below 66% health, a 'Bloodied' status marker when the token is at or below 50% health, a red tint
+//   when the token is at or below 33% health, and the 'Dead X' status marker when the token is at zero health. It will also display a status marker as
+//   appropriate for 'Encumbered', 'Heavily Encumbered', and 'Immobile'.
 
 /* global createObj TokenMod spawnFxWithDefinition getObj state playerIsGM sendChat _ findObjs log on */
 /* jshint bitwise: false */
