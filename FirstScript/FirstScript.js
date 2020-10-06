@@ -21,7 +21,7 @@ var LogVersionLastUpdate = LogVersionLastUpdate || (function() {
 on('ready',function() {
     'use strict';
 
-    // Okay... what the hell is this?
+    // Okay... what the hell is this? Why is CheckInstall not case sensitive??
     TheReturnName.CheckInstall();
 
 });
