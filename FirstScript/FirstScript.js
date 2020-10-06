@@ -21,6 +21,7 @@ var LogVersionLastUpdate = LogVersionLastUpdate || (function() {
 on('ready',function() {
     'use strict';
 
+    // Okay... what the hell is this?
     TheReturnName.CheckInstall();
 
 });
