@@ -22,6 +22,6 @@ on('ready',function() {
     'use strict';
 
     // Okay... what the hell is this? Why is CheckInstall not case sensitive??
-    TheReturnName.CheckInstall();
-
+    // Lou-T *WRONG* TheReturnName.CheckInstall();
+    LogVersionLastUpdate.TheReturnName();
 });
