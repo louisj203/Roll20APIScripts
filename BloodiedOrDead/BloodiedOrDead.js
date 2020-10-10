@@ -15,11 +15,8 @@ on("change:graphic", function(obj) {
     }
     
     var importantChar = true;
-    //if(obj.get("controlledby" !== "") || obj.get("
-    //if(obj.get("??TOKENTYPE" == ??) {
-    //    importantChar = true
-    //}
-
+    //Determine way to set importantChar to true of false..
+      
     if(obj.get("bar1_value") <= 0) {
         //Set dead status marker and remove bloodied status marker and any tints, send dying message (if is a named character), then return.
         //  ** Object Set acceptable syntax: obj.set("property", newvalue) or obj.set({property: newvalue, property2: newvalue2}) **
