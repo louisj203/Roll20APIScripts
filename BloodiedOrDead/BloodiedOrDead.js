@@ -8,7 +8,7 @@ const version = "0.0.1",
 on("change:graphic", function(obj) {
     if(obj.get("bar1_max") === "") return;
     
-    var IsNamedCharacter = false
+    var IsNamedCharacter = false;
     //if(obj.get("??TOKENTYPE" == ??) {
     //    IsNamedCharacter = true
     //}
@@ -32,11 +32,11 @@ on("change:graphic", function(obj) {
     }
     
     //Determine current hitpoint ration "bar1_value" / "bar1_max"
-    var hpRatio = (obj.get("bar1_value") / obj.get("bar1_max));
+    var hpRatio = (obj.get("bar1_value") / obj.get("bar1_max"));
     
     if(hpRatio <= 0.25) {   //Gravely wounded    
         obj.set({
-            tint_color: "RED"
+            tint_color: "RED",
             status_bleeding: true
         });
         if(IsNamedCharacter) {
@@ -46,7 +46,7 @@ on("change:graphic", function(obj) {
     }
     elseif(hpRation <= 0.5) {   //Bloodied
         obj.set({
-            tint_color: "YELLOW"
+            tint_color: "YELLOW",
             status_bleeding: true
         });
         if(IsNamedCharacter) {
@@ -54,9 +54,9 @@ on("change:graphic", function(obj) {
                        
         }        
     }
-    elseif(hpRatio <= 0.75 {    //Injured
+    elseif(hpRatio <= 0.75) {    //Injured
         obj.set({
-            tint_color: "YELLOW"
+            tint_color: "YELLOW",
             status_bleeding: false
         });
         if(IsNamedCharacter) {
@@ -66,7 +66,7 @@ on("change:graphic", function(obj) {
     }
     else{   //Still pretty healthy...
         obj.set({
-            tint_color: "transparent"
+            tint_color: "transparent",
             status_bleeding: false
         });           
     }
