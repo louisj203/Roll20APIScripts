@@ -6,14 +6,13 @@
 const version = "0.0.1",
       lastUpdate = 2010091600;
 
-var importantChar = true;
-
 on("change:graphic", function(obj) {
       
     if(obj.get("bar1_max") == "" || obj.get("bar1_value" == "")) {
         return;
     }
     
+    var importantChar = true;
     //if(obj.get("??TOKENTYPE" == ??) {
     //    importantChar = true
     //}
