@@ -13,6 +13,7 @@ on("change:graphic", function(obj) {
     }
     
     var importantChar = true;
+    //if(obj.get("controlledby" !== "") || obj.get("
     //if(obj.get("??TOKENTYPE" == ??) {
     //    importantChar = true
     //}
@@ -27,7 +28,7 @@ on("change:graphic", function(obj) {
         });
         if(importantChar) {
         //Send a message to everyone of the players dying status
-            sendChat('DYING', '... is unconscious and dying.');               
+            sendChat('DYING', (obj.get("name")) + ' is unconscious and dying.');               
         }
     return;
     }
@@ -45,7 +46,7 @@ on("change:graphic", function(obj) {
         });
         if(importantChar) {
         //Send a message to everyone of the players gravely wounded status
-            sendChat('GRAVELY WOUNDED', '... is gravely wounded.');               
+            sendChat('GRAVELY WOUNDED', (obj.get("name")) + '  is gravely wounded.');               
         }
     }
     else if(hpRatio <= 0.5) {   //Bloodied
@@ -55,7 +56,7 @@ on("change:graphic", function(obj) {
         });
         if(importantChar) {
         //Send a message to everyone of the players bloodied status
-            sendChat('BLOODIED', '... is bloodied.');               
+            sendChat('BLOODIED', (obj.get("name")) + '  is bloodied.');               
         }        
     }
     else if(hpRatio <= 0.75) {    //Injured
@@ -65,7 +66,7 @@ on("change:graphic", function(obj) {
         });
         if(importantChar) {
         //Send a message to everyone of the players injured status
-            sendChat('INJURED', '... is injured.');               
+            sendChat('INJURED', (obj.get("name")) + '  is injured.');               
         }                 
     }
     else{   //Still pretty healthy...
