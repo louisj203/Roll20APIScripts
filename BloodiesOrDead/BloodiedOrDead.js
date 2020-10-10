@@ -1,3 +1,8 @@
+//Comments here...
+
+const version = "0.0.1",
+      lastUpdate = 2010091600
+
 on("change:graphic", function(obj) {
     if(obj.get("bar1_max") === "") return;
     
