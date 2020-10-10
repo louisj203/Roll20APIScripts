@@ -1,4 +1,6 @@
-//Comments here...
+// Github:   https://github.com/louisj203/Roll20APIScripts/edit/master/BloddiedOrDead/BloddiedOrDead.js
+// By:       GM Lou-T
+// Contact:  https://app.roll20.net/users/2990909/lou-t
 
 const version = "0.0.1",
       lastUpdate = 2010091600
