@@ -6,7 +6,7 @@
 const version = "0.0.1",
       lastUpdate = 2010091600;
 
-var IsNamedCharacter = true;
+var importantChar = true;
 
 on("change:graphic", function(obj) {
       
@@ -15,7 +15,7 @@ on("change:graphic", function(obj) {
     }
     
     //if(obj.get("??TOKENTYPE" == ??) {
-    //    IsNamedCharacter = true
+    //    importantChar = true
     //}
 
     if(obj.get("bar1_value") <= 0) {
@@ -26,7 +26,7 @@ on("change:graphic", function(obj) {
             status_bleeding: false,
             status_dead: true
         });
-        if(IsNamedCharacter) {
+        if(importantChar) {
         //Send a message to everyone of the players dying status
             sendChat('DYING', '... is unconscious and dying.');               
         }
@@ -44,7 +44,7 @@ on("change:graphic", function(obj) {
             tint_color: "RED",
             status_bleeding: true
         });
-        if(IsNamedCharacter) {
+        if(importantChar) {
         //Send a message to everyone of the players gravely wounded status
             sendChat('GRAVELY WOUNDED', '... is gravely wounded.');               
         }
@@ -54,7 +54,7 @@ on("change:graphic", function(obj) {
             tint_color: "YELLOW",
             status_bleeding: true
         });
-        if(IsNamedCharacter) {
+        if(importantChar) {
         //Send a message to everyone of the players bloodied status
             sendChat('BLOODIED', '... is bloodied.');               
         }        
@@ -64,7 +64,7 @@ on("change:graphic", function(obj) {
             tint_color: "YELLOW",
             status_bleeding: false
         });
-        if(IsNamedCharacter) {
+        if(importantChar) {
         //Send a message to everyone of the players injured status
             sendChat('INJURED', '... is injured.');               
         }                 
