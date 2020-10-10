@@ -7,6 +7,7 @@ const version = "0.0.1",
       lastUpdate = 2010091600;
 
 on("change:graphic", function(obj) {
+      
     if(obj.get("bar1_max") == "" || obj.get("bar1_value" == "")) return;
 
     var IsNamedCharacter = false;
@@ -45,7 +46,7 @@ on("change:graphic", function(obj) {
                        
         }
     }
-    elseif(hpRatio <= 0.5) {   //Bloodied
+    else if(hpRatio <= 0.5) {   //Bloodied
         obj.set({
             tint_color: "YELLOW",
             status_bleeding: true
@@ -55,7 +56,7 @@ on("change:graphic", function(obj) {
                        
         }        
     }
-    elseif(hpRatio <= 0.75) {    //Injured
+    else if(hpRatio <= 0.75) {    //Injured
         obj.set({
             tint_color: "YELLOW",
             status_bleeding: false
