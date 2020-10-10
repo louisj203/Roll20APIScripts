@@ -1,5 +1,10 @@
 on("change:graphic", function(obj) {
     if(obj.get("bar1_max") === "") return;
+    
+    var IsNamedCharacter = false
+    if(obj.get("??TOKENTYPE" == ??) {
+        IsNamedCharacter = true
+    }
 
     if(obj.get("bar1_value") <= 0) {
         //Set dead status marker and remove bloodied status marker and any tints, send dying message (if is a player character), then return.
