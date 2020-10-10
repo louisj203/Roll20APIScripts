@@ -3,10 +3,10 @@
 // Contact:  https://app.roll20.net/users/2990909/lou-t
 // *NOTE* This script assumes bar_1 is used for HP and that the custom "Bloodied" status marker is part of your status marker set.
 
-const version = "0.1.1",
-      lastUpdate = 2010101315;
+const version = "0.1.11",
+      lastUpdate = 2010101530;
 
-on("change:graphic", function(obj) {
+on("change:token", function(obj, prev) {
 
     var importantChar = true,
         hpValue,
@@ -24,6 +24,11 @@ on("change:graphic", function(obj) {
     hpMax = obj.get("bar1_max");
     if(isNaN(hpMax)) return;
     if(hpMax <= 0) return;
+      
+    if(hpValue == prev["bar1_value"] && hpMax == prev["bar1_max"]) {
+        sendChat('SCRIPT INFO', 'No change in health bar, nothing to see here...');
+        return;
+    }
       
     // Determine way to set importantChar to true of false.. for now assuming it's true.
       
