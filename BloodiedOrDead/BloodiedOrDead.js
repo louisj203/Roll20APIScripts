@@ -7,8 +7,8 @@ const version = "0.0.1",
       lastUpdate = 2010091600;
 
 on("change:graphic", function(obj) {
-    if(obj.get("bar1_max") === "") return;
-    
+    if(obj.get("bar1_max") == "" || obj.get("bar1_value" == "")) return;
+
     var IsNamedCharacter = false;
     //if(obj.get("??TOKENTYPE" == ??) {
     //    IsNamedCharacter = true
