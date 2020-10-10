@@ -72,3 +72,9 @@ on("change:graphic", function(obj) {
     }
     
 });
+          
+on('ready',function() {
+    'use strict';
+    
+   log('BloodiedOrDead Install Info: v'+version+' [lastUpdate: '+lastUpdate+']');
+});
