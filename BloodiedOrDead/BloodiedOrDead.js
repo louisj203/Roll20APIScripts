@@ -1,6 +1,7 @@
 // Github:   https://github.com/louisj203/Roll20APIScripts/edit/master/BloodiedOrDead/BloodiedOrDead.js
 // By:       GM Lou-T
 // Contact:  https://app.roll20.net/users/2990909/lou-t
+// *NOTE* This script assumes bar_1 is used for HP and that the "Bloodied" status marker is part of your status marker set.
 
 const version = "0.0.1",
       lastUpdate = 2010091600;
@@ -44,7 +45,7 @@ on("change:graphic", function(obj) {
                        
         }
     }
-    elseif(hpRation <= 0.5) {   //Bloodied
+    elseif(hpRatio <= 0.5) {   //Bloodied
         obj.set({
             tint_color: "YELLOW",
             status_bleeding: true
