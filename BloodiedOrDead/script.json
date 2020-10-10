@@ -1,1 +1,12 @@
-// HERE
+{
+  "name": "BloodiedOrDead",
+  "version": "0.0.1",
+  "description": "Marks tints and bleeding marker status and dead marker status based on hp ratio (or zero hp).",
+  "authors": "GM Lou-T",
+  "roll20userid": "2990909",
+  "dependencies": [],
+  "modifies": [],
+  "conflicts": [],
+  "script": "BloodiedOrDead.js",
+  "useroptions": {}
+}
