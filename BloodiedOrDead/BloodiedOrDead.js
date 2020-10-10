@@ -34,6 +34,8 @@ on("change:graphic", function(obj) {
     bleedingStatus = currentStatusMarkerString.includes(",Bleeding");
     deadStatus = currentStatusMarkerString.includes(",dead");
     
+    sendChat('DEBUG INFO', 'importantChar: '+importantChar+' hpCurrent: '+hpValue+' hpMax: '+hpMax+' currentStatusMarkerArray: '+currentStatusMarkerArray+' bleedingStatus: '+bleedingStatus+' deadStatus: '+deadStatus); 
+    
     // Dead or dying...
     if(hpValue <= 0) {
         // Set dead status marker and remove bloodied status marker and any tints, send dying message (if 'importantChar'), then return.
