@@ -41,7 +41,7 @@ on("change:graphic", function(obj) {
     
     if(hpRatio <= 0.25) {   //Gravely wounded    
         obj.set({
-            tint_color: "RED",
+            tint_color: "#ff0000",
             status_bleeding: true
         });
         if(importantChar) {
@@ -51,7 +51,7 @@ on("change:graphic", function(obj) {
     }
     else if(hpRatio <= 0.5) {   //Bloodied
         obj.set({
-            tint_color: "YELLOW",
+            tint_color: "#ffff00",
             status_bleeding: true
         });
         if(importantChar) {
@@ -61,7 +61,7 @@ on("change:graphic", function(obj) {
     }
     else if(hpRatio <= 0.75) {    //Injured
         obj.set({
-            tint_color: "YELLOW",
+            tint_color: "#ffff00",
             status_bleeding: false
         });
         if(importantChar) {
