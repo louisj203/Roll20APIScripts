@@ -19,16 +19,16 @@ on("change:graphic", function(obj) {
       
     sendChat('HELLO', 'Well here we are after hp assignments'); 
       
-    sendChat('HELLO1', 'Hello on event, hpValue: ' +hpValue+ ', hpMax: ' +hpMax); 
+    sendChat('HELLO', 'Hello on event, hpValue: ' +hpValue+ ', hpMax: ' +hpMax); 
       
     if(obj.get("bar1_max") === "" || obj.get("bar1_value" === "")) return;
     
-    sendChat('HELLO2', 'Hello in event past initial return'); 
+    sendChat('HELLO', 'Hello in event past initial return'); 
       
     //Determine way to set importantChar to true of false..
       
     if(obj.get("bar1_value") <= 0) {
-        //Set dead status marker and remove bloodied status marker and any tints, send dying message (if is a named character), then return.
+        //Set dead status marker and remove bloodied status marker and any tints, send dying message (if 'importantChar'), then return.
         //  ** Object Set acceptable syntax: obj.set("property", newvalue) or obj.set({property: newvalue, property2: newvalue2}) **
         obj.set({
             tint_color: "transparent",
@@ -36,7 +36,7 @@ on("change:graphic", function(obj) {
             status_dead: true
         });
         if(importantChar) {
-        //Send a message to everyone of the players dying status
+        //Send a message to everyone of the creatures dying status
             sendChat('DYING', (obj.get("name")) + ' is unconscious and dying.');               
         }
     return;
@@ -45,8 +45,8 @@ on("change:graphic", function(obj) {
       obj.set("status_dead", false)
     }
     
-    //Determine current hitpoint ration "bar1_value" / "bar1_max"
-    var hpRatio = (obj.get("bar1_value") / obj.get("bar1_max"));
+    //Determine current hitpoint ratio "bar1_value" / "bar1_max"
+    var hpRatio = hpValue / hpMax;
     
     if(hpRatio <= 0.25) {   //Gravely wounded    
         obj.set({
@@ -54,7 +54,7 @@ on("change:graphic", function(obj) {
             status_bleeding: true
         });
         if(importantChar) {
-        //Send a message to everyone of the players gravely wounded status
+        //Send a message to everyone of the creatures gravely wounded status
             sendChat('GRAVELY WOUNDED', (obj.get("name")) + '  is gravely wounded.');               
         }
     }
@@ -64,7 +64,7 @@ on("change:graphic", function(obj) {
             status_bleeding: true
         });
         if(importantChar) {
-        //Send a message to everyone of the players bloodied status
+        //Send a message to everyone of the characters bloodied status
             sendChat('BLOODIED', (obj.get("name")) + '  is bloodied.');               
         }        
     }
@@ -74,7 +74,7 @@ on("change:graphic", function(obj) {
             status_bleeding: false
         });
         if(importantChar) {
-        //Send a message to everyone of the players injured status
+        //Send a message to everyone of the creatures injured status
             sendChat('INJURED', (obj.get("name")) + '  is injured.');               
         }                 
     }
