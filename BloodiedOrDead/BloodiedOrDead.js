@@ -24,7 +24,8 @@ on("change:graphic", function(obj) {
     sendChat('HELLO', 'Well here we are after valid hp value and max assignments'); 
       
     //Determine way to set importantChar to true of false.. for now assuming it's true.
-      
+     
+    //Dead or dying...
     if(hpValue <= 0) {
         //Set dead status marker and remove bloodied status marker and any tints, send dying message (if 'importantChar'), then return.
         //  ** Object Set acceptable syntax: obj.set("property", newvalue) or obj.set({property: newvalue, property2: newvalue2}) **
