@@ -10,10 +10,13 @@ on("change:graphic", function(obj) {
 
     var importantChar = true,
         hpValue,
-        hpMax;
+        hpMax,
+        currentStatusMarkerString,
+        currentStatusMarkerArray,
+        filteredStatusMarkerArray,
+        bleedingStatus,
+        deadStatus;
 
-    // sendChat('HELLO', 'Well here we are'); 
-      
     hpValue = obj.get("bar1_value");
     if(isNaN(hpValue)) return;
       
@@ -21,14 +24,24 @@ on("change:graphic", function(obj) {
     if(isNaN(hpMax)) return;
     if(hpMax <= 0) return;
       
-    // sendChat('HELLO', 'Well here we are after valid hp value and max assignments'); 
-      
     // Determine way to set importantChar to true of false.. for now assuming it's true.
-     
+      
+    currentStatusMarkerString = obj.get("statusmarkers");
+    currentStatusMarkerArray = currentStatusMarkerString.split(",");
+    
+    // bleedingStatus, deadStatus = true if an "Bleeding" or "dead" is the start of any given array element, false otherwise.
+    
+    bleedingStatus = currentStatusMarkerString.includes(",Bleeding");
+    deadStatus = currentStatusMarkerString.includes(",dead");
+    
     // Dead or dying...
     if(hpValue <= 0) {
         // Set dead status marker and remove bloodied status marker and any tints, send dying message (if 'importantChar'), then return.
         //  ** Object Set acceptable syntax: obj.set("property", newvalue) or obj.set({property: newvalue, property2: newvalue2}) **
+        
+        if(bleedingStatus) {
+                
+        }
         obj.set({
             tint_color: "transparent",
             status_Bleeding: false,
@@ -88,6 +101,17 @@ on("change:graphic", function(obj) {
         });           
     }
     
+    // subArrayFunction will return a subArray of the mainArray without the elements that match filterTest
+    function subArrayFunction(mainArray, filterTest) {
+        
+        var filteredArray,
+            mainArrayLength = mainArray.length;
+        
+    
+        return filteredArray;
+        
+    }
+        
 });
           
 on('ready',function() {
