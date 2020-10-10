@@ -6,16 +6,18 @@
 const version = "0.0.1",
       lastUpdate = 2010091600;
 
-var importantChar = true;
-var hpValue;
-var hpMax;
-
 on("change:graphic", function(obj) {
 
+    var importantChar = true,
+        hpValue,
+        hpMax;
+
+    sendChat('HELLO', 'Well here we are'); 
+      
     hpValue = obj.get("bar1_value");
     hpMax = obj.get("bar1_max");
       
-    sendChat('HELLO', 'Hello on event, hpValue: ' +hpValue+ ', hpMax: ' +hpMax); 
+    sendChat('HELLO1', 'Hello on event, hpValue: ' +hpValue+ ', hpMax: ' +hpMax); 
       
     if(obj.get("bar1_max") === "" || obj.get("bar1_value" === "")) return;
     
