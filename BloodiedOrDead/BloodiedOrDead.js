@@ -7,17 +7,17 @@ const version = "0.0.1",
       lastUpdate = 2010091600;
 
 var importantChar = true;
+var hpValue;
+var hpMax;
 
 on("change:graphic", function(obj) {
 
-    var hpValue = obj.get("bar1_value");
-    var hpMax = obj.get("bar1_max");
+    hpValue = obj.get("bar1_value");
+    hpMax = obj.get("bar1_max");
       
     sendChat('HELLO', 'Hello on event, hpValue: ' +hpValue+ ', hpMax: ' +hpMax); 
       
-    if(obj.get("bar1_max") == "" || obj.get("bar1_value" == "")) {
-        return;
-    }
+    if(obj.get("bar1_max") === "" || obj.get("bar1_value" === "")) return;
     
     sendChat('HELLO2', 'Hello in event past initial return'); 
       
