@@ -10,7 +10,10 @@ var importantChar = true;
 
 on("change:graphic", function(obj) {
 
-    sendChat('HELLO', 'Hello on event'); 
+    var hpValue = obj.get("bar1_value");
+    var hpMax = obj.get("bar1_max");
+      
+    sendChat('HELLO', 'Hello on event, hpValue: ' +hpValue+ ', hpMax: ' +hpMax); 
       
     if(obj.get("bar1_max") == "" || obj.get("bar1_value" == "")) {
         return;
