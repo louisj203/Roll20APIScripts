@@ -3,8 +3,8 @@
 // Contact:  https://app.roll20.net/users/2990909/lou-t
 // *NOTE* This script assumes bar_1 is used for HP and that the "Bloodied" status marker is part of your status marker set.
 
-const version = "0.0.1",
-      lastUpdate = 2010091600;
+const version = "0.0.8",
+      lastUpdate = 2010100600;
 
 on("change:graphic", function(obj) {
 
@@ -46,7 +46,8 @@ on("change:graphic", function(obj) {
     //Determine current hitpoint ratio "bar1_value" / "bar1_max"
     var hpRatio = hpValue / hpMax;
     
-    if(hpRatio <= 0.25) {   //Gravely wounded    
+    //Gravely wounded  
+    if(hpRatio <= 0.25) {       
         obj.set({
             tint_color: "#ff0000",
             status_bleeding: true
@@ -56,7 +57,8 @@ on("change:graphic", function(obj) {
             sendChat('GRAVELY WOUNDED', (obj.get("name")) + '  is gravely wounded.');               
         }
     }
-    else if(hpRatio <= 0.5) {   //Bloodied
+    //Bloodied
+    else if(hpRatio <= 0.5) {
         obj.set({
             tint_color: "#ffff00",
             status_bleeding: true
