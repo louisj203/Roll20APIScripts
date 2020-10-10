@@ -4,7 +4,7 @@
 // *NOTE* This script assumes bar_1 is used for HP and that the "Bloodied" status marker is part of your status marker set.
 
 const version = "0.0.8",
-      lastUpdate = 2010100600;
+      lastUpdate = 2010100800;
 
 on("change:graphic", function(obj) {
 
@@ -12,7 +12,7 @@ on("change:graphic", function(obj) {
         hpValue,
         hpMax;
 
-    sendChat('HELLO', 'Well here we are'); 
+    // sendChat('HELLO', 'Well here we are'); 
       
     hpValue = obj.get("bar1_value");
     if(isNaN(hpValue)) return;
@@ -21,17 +21,17 @@ on("change:graphic", function(obj) {
     if(isNaN(hpMax)) return;
     if(hpMax <= 0) return;
       
-    sendChat('HELLO', 'Well here we are after valid hp value and max assignments'); 
+    // sendChat('HELLO', 'Well here we are after valid hp value and max assignments'); 
       
-    //Determine way to set importantChar to true of false.. for now assuming it's true.
+    // Determine way to set importantChar to true of false.. for now assuming it's true.
      
-    //Dead or dying...
+    // Dead or dying...
     if(hpValue <= 0) {
-        //Set dead status marker and remove bloodied status marker and any tints, send dying message (if 'importantChar'), then return.
+        // Set dead status marker and remove bloodied status marker and any tints, send dying message (if 'importantChar'), then return.
         //  ** Object Set acceptable syntax: obj.set("property", newvalue) or obj.set({property: newvalue, property2: newvalue2}) **
         obj.set({
             tint_color: "transparent",
-            status_bleeding: false,
+            status_Bleeding: false,
             status_dead: true
         });
         if(importantChar) {
@@ -41,50 +41,50 @@ on("change:graphic", function(obj) {
     return;
     }
     else {
-      obj.set("status_dead", false)
+        obj.set("status_dead", false)
     }
     
-    //Determine current hitpoint ratio "bar1_value" / "bar1_max"
+    // Determine current hitpoint ratio "bar1_value" / "bar1_max"
     var hpRatio = hpValue / hpMax;
     
-    //Gravely wounded  
+    // Gravely wounded  
     if(hpRatio <= 0.25) {       
         obj.set({
             tint_color: "#ff0000",
-            status_bleeding: true
+            status_Bleeding: true
         });
         if(importantChar) {
-        //Send a message to everyone of the creatures gravely wounded status
+        // Send a message to everyone of the creatures gravely wounded status
             sendChat('GRAVELY WOUNDED', obj.get("name") + ' is gravely wounded.');               
         }
     }
-    //Bloodied
+    // Bloodied
     else if(hpRatio <= 0.5) {
         obj.set({
             tint_color: "#ffff00",
-            status_bleeding: true
+            status_Bleeding: true
         });
         if(importantChar) {
-        //Send a message to everyone of the characters bloodied status
+        // Send a message to everyone of the creatures bloodied status
             sendChat('BLOODIED', obj.get("name") + ' is bloodied.');               
         }        
     }
-    //Injured
+    // Injured
     else if(hpRatio <= 0.75) {
         obj.set({
             tint_color: "#ffff00",
-            status_bleeding: false
+            status_Bleeding: false
         });
         if(importantChar) {
-        //Send a message to everyone of the creatures injured status
+        // Send a message to everyone of the creatures injured status
             sendChat('INJURED', obj.get("name") + ' is injured.');               
         }                 
     }
-    //Still pretty healthy...  
+    // Still pretty healthy...  
     else{
         obj.set({
             tint_color: "transparent",
-            status_bleeding: false
+            status_Bleeding: false
         });           
     }
     
