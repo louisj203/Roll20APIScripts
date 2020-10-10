@@ -6,6 +6,8 @@
 const version = "0.0.1",
       lastUpdate = 2010091600;
 
+var importantChar = true;
+
 on("change:graphic", function(obj) {
 
     sendChat('HELLO', 'Hello on event'); 
@@ -14,7 +16,8 @@ on("change:graphic", function(obj) {
         return;
     }
     
-    var importantChar = true;
+    sendChat('HELLO2', 'Hello in event past initial return'); 
+      
     //Determine way to set importantChar to true of false..
       
     if(obj.get("bar1_value") <= 0) {
