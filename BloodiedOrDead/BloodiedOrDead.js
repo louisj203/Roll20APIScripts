@@ -3,7 +3,7 @@
 // Contact:  https://app.roll20.net/users/2990909/lou-t
 
 const version = "0.0.1",
-      lastUpdate = 2010091600
+      lastUpdate = 2010091600;
 
 on("change:graphic", function(obj) {
     if(obj.get("bar1_max") === "") return;
@@ -77,4 +77,5 @@ on('ready',function() {
     'use strict';
     
    log('BloodiedOrDead Install Info: v'+version+' [lastUpdate: '+lastUpdate+']');
+      
 });
