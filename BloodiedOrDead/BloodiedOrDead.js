@@ -17,6 +17,8 @@ on("change:graphic", function(obj) {
     hpValue = obj.get("bar1_value");
     hpMax = obj.get("bar1_max");
       
+    sendChat('HELLO', 'Well here we are after hp assignments'); 
+      
     sendChat('HELLO1', 'Hello on event, hpValue: ' +hpValue+ ', hpMax: ' +hpMax); 
       
     if(obj.get("bar1_max") === "" || obj.get("bar1_value" === "")) return;
