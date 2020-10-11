@@ -67,6 +67,7 @@ on("change:graphic", function(obj, prev) {
     currentStatusMarkerString = obj.get("statusmarkers");
     if(currentStatusMarkerString === undefined || currentStatusMarkerString === "") {
         currentStatusMarkerArray = [];
+    }
     else if(currentStatusMarkerString.indexOf(",") === -1) {
         currentStatusMarkerArray[0] = currentStatusMarkerString;
     }
