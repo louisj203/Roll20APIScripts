@@ -4,8 +4,8 @@
 // *NOTE* This script assumes bar_1 is used for HP and that the custom "Bleeding::492665" status marker is part of your status marker set.
 // You must also include somewhere in the name on an NPC's character sheet 'sidekick' or 'henchman' if you want to see messages from this script.
 
-const version = "0.2.10",
-      lastUpdate = 2010111040;
+const version = "0.2.11",
+      lastUpdate = 2010111110;
 
 on("change:graphic", function(obj, prev) {
     "use strict";
@@ -22,6 +22,7 @@ on("change:graphic", function(obj, prev) {
         bleedingStatus,
         deadStatus,
         tokenRepresents,
+        tokenName,
         representsName,
         strConditioned;
     
@@ -64,7 +65,14 @@ on("change:graphic", function(obj, prev) {
     }
     
     currentStatusMarkerString = obj.get("statusmarkers");
-    currentStatusMarkerArray = currentStatusMarkerString.split(",");
+    if(currentStatusMarkerString === undefined || currentStatusMarkerString === "") {
+        currentStatusMarkerArray = [];
+    else if(currentStatusMarkerString.indexOf(",") === -1) {
+        currentStatusMarkerArray[0] = currentStatusMarkerString;
+    }
+    else{
+        currentStatusMarkerArray = currentStatusMarkerString.split(",");
+    }
     // sendChat('DEBUG INFO', 'Value of the Marker Array: '+currentStatusMarkerArray+' Type of the Marker Array: '+typeof currentStatusMarkerArray+'.');
     
     // bleedingStatus, deadStatus = true if an "Bleeding" or "dead" is the start of any given array element, false otherwise.
