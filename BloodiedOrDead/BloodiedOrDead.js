@@ -1,11 +1,11 @@
 // Github:   https://github.com/louisj203/Roll20APIScripts/edit/master/BloodiedOrDead/BloodiedOrDead.js
 // By:       GM Lou-T
 // Contact:  https://app.roll20.net/users/2990909/lou-t
-// *NOTE* This script assumes bar_1 is used for HP and that the custom "Bleeding::492665" status marker is part of your status marker set.
-// You must also include somewhere in the name on an NPC's character sheet 'sidekick' or 'henchman' if you want to see messages from this script.
+// *NOTE* This script assumes token bar1 is used for HP and that the custom "Bleeding::492665" status marker is part of your status marker set.
+// You must also include somewhere in the name on an NPC's character sheet 'sidekick' or 'henchman' if you want to see injury messages from this script.
 
-const version = "0.2.11",
-      lastUpdate = 2010111110;
+const version = "0.2.18",
+      lastUpdate = 201011500;
 
 on("change:graphic", function(obj, prev) {
     "use strict";
@@ -34,7 +34,7 @@ on("change:graphic", function(obj, prev) {
     if(isNaN(hpMax)) return;
     if(hpMax <= 0) return;
     if(hpValue === prev["bar1_value"] && hpMax === prev["bar1_max"]) {
-        // sendChat('SCRIPT INFO', 'No change in health bar, nothing to see here...');
+        sendChat('SCRIPT INFO', 'No change in health bar, nothing to see here...');
         return;
     }
     
@@ -47,40 +47,46 @@ on("change:graphic", function(obj, prev) {
         importantChar = true;   // Controlled by one or more players
     }
     else if(strConditioned !== undefined && strConditioned !== "") {
+        
         tokenRepresents = getObj('character', strConditioned);
-        if(tokenRepresents === undefined) {
-            representsName = undefined;
-        }
-        else{
+        if(tokenRepresents !== undefined) {
             representsName = tokenRepresents.get("name");
         }
-        // sendChat('DEBUG INFO', 'tokenRepresents object and representsName set. Name: '+representsName+'.');
+        
+        sendChat('DEBUG INFO', 'tokenRepresents object and representsName set. Name: '+representsName+'.');
         if(representsName !== undefined && representsName !== "") {
             strConditioned = representsName.toLowerCase();
             if(strConditioned.indexOf("sidekick") >= 0 || strConditioned.indexOf("henchman") >= 0) {
-                // sendChat('DEBUG INFO', 'The NPC is a Sidekick or a Henchman.');
+                sendChat('DEBUG INFO', 'The NPC is a Sidekick or Henchman.');
                 importantChar = true;
             }
         }
     }
     
     currentStatusMarkerString = obj.get("statusmarkers");
-    if(currentStatusMarkerString === undefined || currentStatusMarkerString === "") {
+    sendChat('DEBUG INFO', '006');
+    if(currentStatusMarkerString.length == 0) {
+        sendChat('DEBUG INFO', '007');
         currentStatusMarkerArray = [];
+        sendChat('DEBUG INFO', '008');
     }
-    else if(currentStatusMarkerString.indexOf(",") === -1) {
+    else if(currentStatusMarkerString.indexOf(",") == -1) {
+        sendChat('DEBUG INFO', '010');
         currentStatusMarkerArray[0] = currentStatusMarkerString;
+        sendChat('DEBUG INFO', '011');
     }
     else{
+        sendChat('DEBUG INFO', '013');
         currentStatusMarkerArray = currentStatusMarkerString.split(",");
+        sendChat('DEBUG INFO', '014');
     }
-    // sendChat('DEBUG INFO', 'Value of the Marker Array: '+currentStatusMarkerArray+' Type of the Marker Array: '+typeof currentStatusMarkerArray+'.');
+    sendChat('DEBUG INFO', 'Value of the Marker string: '+currentStatusMarkerString+' Type of the Marker string: '+typeof currentStatusMarkerString+'. Value of the Marker Array: '+currentStatusMarkerArray+' Type of the Marker Array: '+typeof currentStatusMarkerArray+'.');
     
     // bleedingStatus, deadStatus = true if an "Bleeding" or "dead" is the start of any given array element, false otherwise.
     bleedingStatus = currentStatusMarkerString.includes("Bleeding::492665");
     deadStatus = currentStatusMarkerString.includes("dead");
     
-    // sendChat('DEBUG INFO', '(BEFORE HP calculation changes) hpValue: '+hpValue+' hpMax: '+hpMax+' tokenName: '+obj.get("name")+' | charName: '+representsName+' | importantChar: '+importantChar+' | currentStatusMarkerString: '+currentStatusMarkerString+' | bleedingStatus: '+bleedingStatus+' | deadStatus: '+deadStatus+'.'); 
+    sendChat('DEBUG INFO', '(BEFORE HP calculation changes) hpValue: '+hpValue+' hpMax: '+hpMax+' tokenName: '+obj.get("name")+' | charName: '+representsName+' | importantChar: '+importantChar+' | bleedingStatus: '+bleedingStatus+' | deadStatus: '+deadStatus+'.'); 
     
     // Dead or dying...
     if(hpValue <= 0) {
@@ -91,16 +97,14 @@ on("change:graphic", function(obj, prev) {
             filteredStatusMarkerArray = subArrayFuction(currentStatusMarkerArray, "Bleeding::492665"); 
             currentStatusMarkerArray = filteredStatusMarkerArray;
         }
-        
         if(!deadStatus) {
-            if(currentStatusMarkerArray.length = 0) {
+            if(currentStatusMarkerArray.length == 0) {
                 currentStatusMarkerArray[0] = ("dead");
             }
             else{
                 currentStatusMarkerArray.push("dead");
             }
         }
-        
         newStatusMarkerString = currentStatusMarkerArray.toString();
           
         obj.set({
@@ -113,9 +117,11 @@ on("change:graphic", function(obj, prev) {
         }
         return;
     }
-    else if(deadStatus) {
-        filteredStatusMarkerArray = subArrayFuction(currentStatusMarkerArray, "dead"); 
-        currentStatusMarkerArray = filteredStatusMarkerArray;
+    else{
+        if(deadStatus) {
+            filteredStatusMarkerArray = subArrayFuction(currentStatusMarkerArray, "dead"); 
+            currentStatusMarkerArray = filteredStatusMarkerArray;
+        }
     }
     
     // Determine current hitpoint ratio "bar1_value" / "bar1_max"
@@ -123,20 +129,22 @@ on("change:graphic", function(obj, prev) {
     
     // Determine "Bleeding" token status marker one time, so we're not doing it in each 'if' conditional statement
     if(hpRatio <= 0.5 && !bleedingStatus) {
-        if(currentStatusMarkerArray.length = 0) {
+        if(currentStatusMarkerArray.length == 0) {
             currentStatusMarkerArray[0] = ("Bleeding::492665");
         }
         else{
             currentStatusMarkerArray.push("Bleeding::492665");
         }
     }
-    else if(hpRatio > 0.5 && bleedingStatus) {
-        filteredStatusMarkerArray = subArrayFuction(currentStatusMarkerArray, "Bleeding::492665");
-        currentStatusMarkerArray = filteredStatusMarkerArray;
+    else{
+        if(hpRatio > 0.5 && bleedingStatus) {
+            filteredStatusMarkerArray = subArrayFuction(currentStatusMarkerArray, "Bleeding::492665");
+            currentStatusMarkerArray = filteredStatusMarkerArray;
+        }
     }
     
     newStatusMarkerString = currentStatusMarkerArray.toString();
-    // sendChat('DEBUG INFO', 'After dead/bleeding/hp calculations, newStatusMarkerString: '+newStatusMarkerString+'.');
+    sendChat('DEBUG INFO', 'After dead/bleeding/hp calculations, newStatusMarkerString: '+newStatusMarkerString+'.');
     
     // Gravely wounded  
     if(hpRatio <= 0.25) {
@@ -186,11 +194,11 @@ on("change:graphic", function(obj, prev) {
                  
         for (arrayElement of mainArray) {
             if(!arrayElement.includes(filterTest)) {
-                if(filteredArray.length = 0) {
+                if(filteredArray.length == 0) {
                     filteredArray[0] = arrayElement;
                 }
                 else{
-                filteredArray.push(arrayElement); 
+                    filteredArray.push(arrayElement); 
                 }
             }        
         }    
