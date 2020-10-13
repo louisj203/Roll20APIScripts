@@ -8,8 +8,8 @@ let blodiedOrDeadReady = false;
 
 on('ready', function () {
 
-    const currentVersion = "1.0.9",
-        lastUpdate = 2011131000;
+    const currentVersion = "1.0.11",
+        lastUpdate = new (Date);
     
     log('BloodiedOrDead Install Info: v' + currentVersion + ' Last Update: ' + lastUpdate);
     
@@ -31,37 +31,24 @@ on("change:graphic", function (obj, prev) {
     if (obj.get("_subtype") != "token") return;
     
     let importantChar,
-        hpValue,
-        hpMax,
-        hpRatio,
+        hpValue, hpPrev, hpMax, hpRatio,
         sControlledBy,
-        currentStatusMarkerString,
-        newStatusMarkerString,
-        currentStatusMarkerArray,
-        filteredStatusMarkerArray,
-        bleedingStatus,
-        deadStatus,
-        tokenName,
-        tokenRepresents,
+        currentStatusMarkerString, newStatusMarkerString,
+        currentStatusMarkerArray, filteredStatusMarkerArray,
+        bleedingStatus, deadStatus,
+        tokenName, tokenRepresents,
         charSheet,
-        representsName,
-        strConditioned;
+        representsName;
+        // strConditioned;
 
-    hpValue = obj.get("bar1_value");
-    if (isNaN(hpValue)) return;
-    hpMax = obj.get("bar1_max");
-    if (isNaN(hpMax)) return;
-    if (hpMax <= 0) return;
-    
-    // sendChat('prev values check', 'prev.bar1_Vale: ' + prev.bar1_value + ' prev.bar1_max: ' + prev.bar1_max);
-    if (hpValue === prev.bar1_value && hpMax === prev.bar1_max) {
-        // sendChat('SCRIPT INFO', 'No change in health bar, nothing to see here...');
-        return;
-    }
+    hpValue = parseInt(obj.get("bar1_value"),10);
+    hpMax = parseInt(obj.get("bar1_max"),10);
+    hpPrev = prev.["bar1_value"]
+    if (isNaN(hpValue) || isNaN(hpMax) || IsNaN(hpPrev) || hpValue == hpPrev) return;
 
     // Is this a token the players care about? If not, we don't want to spam chat.
     importantChar = false;
-    // First, does the graphic represemt a character
+    // First, does the token represemt a character
     tokenRepresents = obj.get("represents");
     if (tokenRepresents !== undefined && tokenRepresents !== "") {
         // Yes it does so get the character object
@@ -70,11 +57,11 @@ on("change:graphic", function (obj, prev) {
             // Valid character
             sControlledBy = charSheet.get("controlledby")
             representsName = charSheet.get("name")
-            strConditioned = representsName.toLowerCase()
+            // strConditioned = representsName.toLowerCase()
             if (sControlledBy != "") {
                 // Controlled by one or more player
                 importantChar = true;
-            } else if (strConditioned.indexOf("sidekick") >= 0 || strConditioned.indexOf("henchman") >= 0) {
+            } else if ((representsName.toLowerCase()).indexOf("sidekick") >= 0 || (representsName.toLowerCase()).indexOf("henchman") >= 0) {
                 // Character is a Sidekick or Henchmane
                 importantChar = true;
             }
