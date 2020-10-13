@@ -44,7 +44,7 @@ on("change:graphic", function (obj, prev) {
     hpValue = parseInt(obj.get("bar1_value"),10);
     hpMax = parseInt(obj.get("bar1_max"),10);
     hpPrev = prev.["bar1_value"]
-    if (isNaN(hpValue) || isNaN(hpMax) || IsNaN(hpPrev) || hpValue == hpPrev) return;
+    if (isNaN(hpValue) || isNaN(hpMax) || isNaN(hpPrev) || hpValue == hpPrev) return;
 
     // Is this a token the players care about? If not, we don't want to spam chat.
     importantChar = false;
