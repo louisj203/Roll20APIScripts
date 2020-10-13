@@ -8,8 +8,8 @@ let blodiedOrDeadReady = false;
 
 on('ready', function () {
 
-    const currentVersion = "0.2.22",
-        lastUpdate = 2011110900;
+    const currentVersion = "1.0.3",
+        lastUpdate = 2011130600;
     
     log('BloodiedOrDead Install Info: v' + currentVersion + ' Last Update: ' + lastUpdate);
     
@@ -21,7 +21,7 @@ on("change:graphic", function (obj, prev) {
 
     // Don't run it 'ready' event hasn't fired
     if (!blodiedOrDeadReady) {
-        sendChat('WARNING', 'Change event triggered before ready event. EXITING function call.');
+        log('WARNING', 'Change event triggered before ready event. EXITING BloodiedOrDead.');
         return;
     }
     
@@ -42,7 +42,7 @@ on("change:graphic", function (obj, prev) {
         representsName,
         strConditioned;
 
-    sendChat('DEBUG INFO', 'Event Triggered: ' + Date.now());
+    // sendChat('DEBUG INFO', 'Event Triggered: ' + Date.now());
 
     hpValue = obj.get("bar1_value");
     if (isNaN(hpValue)) return;
@@ -50,7 +50,7 @@ on("change:graphic", function (obj, prev) {
     if (isNaN(hpMax)) return;
     if (hpMax <= 0) return;
     if (hpValue === prev.bar1_value && hpMax === prev.bar1_max) {
-        sendChat('SCRIPT INFO', 'No change in health bar, nothing to see here...');
+        // sendChat('SCRIPT INFO', 'No change in health bar, nothing to see here...');
         return;
     }
 
@@ -65,53 +65,48 @@ on("change:graphic", function (obj, prev) {
         if (charSheet !== undefined) {
             representsName = charSheet.get("name");
             if (representsName !== undefined && representsName !== "") {
-                sendChat('DEBUG INFO', 'tokenRepresents a character sheet with the name:' + representsName + '.');
+                // sendChat('DEBUG INFO', 'tokenRepresents a character sheet with the name:' + representsName + '.');
                 strConditioned = representsName.toLowerCase();
                 if (strConditioned.indexOf("sidekick") >= 0 || strConditioned.indexOf("henchman") >= 0) {
-                    sendChat('DEBUG INFO', 'The NPC is a Sidekick or Henchman.');
+                    // sendChat('DEBUG INFO', 'The NPC is a Sidekick or Henchman.');
                     importantChar = true;
                 }
             }
         }
     }
 
-    currentStatusMarkerString = obj.get("statusmarkers");
-    sendChat('DEBUG INFO', '006');
+    currentStatusMarkerString = (obj.get("statusmarkers")).trim();  // THIS WORKS!!
+    // sendChat('DEBUG INFO', 'curentStatusMarkerString: ' + currentStatusMarkerString);
+    
+    // Define currentStatusMarkerArray
     if (currentStatusMarkerString.length === 0) {
-        sendChat('DEBUG INFO', '007');
         currentStatusMarkerArray = [];
-        sendChat('DEBUG INFO', '008');
     } else if (currentStatusMarkerString.indexOf(",") === -1) {
-        sendChat('DEBUG INFO', '010');
-        currentStatusMarkerArray[0] = currentStatusMarkerString;
-        sendChat('DEBUG INFO', '011');
+        currentStatusMarkerArray = [currentStatusMarkerString];
     } else {
-        sendChat('DEBUG INFO', '013');
         currentStatusMarkerArray = currentStatusMarkerString.split(",");
-        sendChat('DEBUG INFO', '014');
     }
-    sendChat('DEBUG INFO', 'Value of the Marker string: ' + currentStatusMarkerString + ' Type of the Marker string: ' + typeof currentStatusMarkerString + ' Value of the Marker Array: ' +
-        currentStatusMarkerArray + ' Type of the Marker Array: ' + typeof currentStatusMarkerArray + '.');
+    // sendChat('DEBUG INFO', 'Value of the Marker string: ' + currentStatusMarkerString + ' Type of the Marker string: ' + typeof currentStatusMarkerString + ' Value of the Marker Array: ' +
+    //    currentStatusMarkerArray + ' Type of the Marker Array: ' + typeof currentStatusMarkerArray + '.');
 
     // bleedingStatus, deadStatus = true if an "Bleeding" or "dead" is the start of any given array element, false otherwise.
     bleedingStatus = currentStatusMarkerString.includes("Bleeding::492665");
     deadStatus = currentStatusMarkerString.includes("dead");
 
-    sendChat('DEBUG INFO', '(BEFORE HP calculation changes) hpValue: ' + hpValue + ' hpMax: ' + hpMax + ' tokenName: ' + obj.get("name") + ' | charName: ' + representsName +
-        ' | importantChar: ' + importantChar + ' | bleedingStatus:  '+ bleedingStatus + ' | deadStatus: ' + deadStatus + '.'); 
+    // sendChat('DEBUG INFO', '(BEFORE HP calculation changes) hpValue: ' + hpValue + ' hpMax: ' + hpMax + ' tokenName: ' + obj.get("name") + ' | charName: ' + representsName +
+    //    ' | importantChar: ' + importantChar + ' | bleedingStatus:  '+ bleedingStatus + ' | deadStatus: ' + deadStatus + '.'); 
 
     // Dead or dying...
     if (hpValue <= 0) {
         // Set dead status marker and remove bloodied status marker and any tints, send dying message (if 'importantChar'), then return.
         //  ** Object Set acceptable syntax: obj.set("property", newvalue); or obj.set({property: newvalue, property2: newvalue2}); **
-
         if (bleedingStatus) {
-            filteredStatusMarkerArray = subArrayFuction(currentStatusMarkerArray, "Bleeding::492665"); 
+            filteredStatusMarkerArray = subArrayFunction(currentStatusMarkerArray, "Bleeding::492665"); 
             currentStatusMarkerArray = filteredStatusMarkerArray;
         }
         if (!deadStatus) {
             if (currentStatusMarkerArray.length == 0) {
-                currentStatusMarkerArray[0] = ("dead");
+                currentStatusMarkerArray[0] = "dead";
             } else {
                 currentStatusMarkerArray.push("dead");
             }
@@ -130,7 +125,7 @@ on("change:graphic", function (obj, prev) {
     } else {
         // Remove "dead" from thes statusmarker strin
         if (deadStatus) {
-            filteredStatusMarkerArray = subArrayFuction(currentStatusMarkerArray, "dead"); 
+            filteredStatusMarkerArray = subArrayFunction(currentStatusMarkerArray, "dead"); 
             currentStatusMarkerArray = filteredStatusMarkerArray;
         }
     }
@@ -141,18 +136,18 @@ on("change:graphic", function (obj, prev) {
     // Determine "Bleeding" token status marker one time, so we're not doing it in each 'if' conditional statement
     if (hpRatio <= 0.5 && !bleedingStatus) {
         if (currentStatusMarkerArray.length == 0) {
-            currentStatusMarkerArray[0] = ("Bleeding::492665");
+            currentStatusMarkerArray[0] = "Bleeding::492665";
         } else {
             currentStatusMarkerArray.push("Bleeding::492665");
         }
     } else {
         if (hpRatio > 0.5 && bleedingStatus) {
-            filteredStatusMarkerArray = subArrayFuction(currentStatusMarkerArray, "Bleeding::492665");
+            filteredStatusMarkerArray = subArrayFunction(currentStatusMarkerArray, "Bleeding::492665");
             currentStatusMarkerArray = filteredStatusMarkerArray;
         }
     }
     newStatusMarkerString = currentStatusMarkerArray.toString();
-    sendChat('DEBUG INFO', 'After dead/bleeding/hp calculations, newStatusMarkerString: ' + newStatusMarkerString + '.');
+    // sendChat('DEBUG INFO', 'After dead/bleeding/hp calculations, newStatusMarkerString: ' + newStatusMarkerString + '.');
 
     if (hpRatio <= 0.25) {
         // Gravely wounded  
@@ -187,6 +182,9 @@ on("change:graphic", function (obj, prev) {
             tint_color: "transparent",
             statusmarkers: newStatusMarkerString
         });           
+        if (importantChar) {
+            sendChat('UNINJURED', obj.get("name") + ' is not significantly injured.');               
+        }
     }
     
     // subArrayFunction will return a subArray of the mainArray without the elements that contain (include) filterTest string. mainArray is assumed to be a statusmarker string
