@@ -4,16 +4,16 @@
 // *NOTE* This script assumes token bar1 is used for HP and that the custom "Bleeding::492665" status marker is part of your status marker set.
 // You must also include somewhere in the name on an NPC's character sheet 'sidekick' or 'henchman' if you want to see injury messages from this script.
 
-let blodiedOrDeadReady = false;
+let bloodiedOrDeadReady = false;
 
 on('ready', function () {
 
-    const currentVersion = "1.0.11",
+    const currentVersion = "1.0.12",
         lastUpdate = new (Date);
     
     log('BloodiedOrDead Install Info: v' + currentVersion + ' Last Update: ' + lastUpdate);
     
-    blodiedOrDeadReady = true;
+    bloodiedOrDeadReady = true;
     
 });
 
@@ -22,7 +22,7 @@ on("change:graphic", function (obj, prev) {
     // sendChat('DEBUG INFO', 'Event Triggered: ' + Date.now());
     
     // Don't run it 'ready' event hasn't fired
-    if (!blodiedOrDeadReady) {
+    if (!bloodiedOrDeadReady) {
         log('WARNING', 'Change event triggered before ready event. EXITING BloodiedOrDead.');
         return;
     }
@@ -43,7 +43,7 @@ on("change:graphic", function (obj, prev) {
 
     hpValue = parseInt(obj.get("bar1_value"),10);
     hpMax = parseInt(obj.get("bar1_max"),10);
-    hpPrev = prev.["bar1_value"]
+    hpPrev = prev["bar1_value"];
     if (isNaN(hpValue) || isNaN(hpMax) || isNaN(hpPrev) || hpValue == hpPrev) return;
 
     // Is this a token the players care about? If not, we don't want to spam chat.
@@ -55,8 +55,8 @@ on("change:graphic", function (obj, prev) {
         charSheet = getObj('character', tokenRepresents);
         if (charSheet != undefined) {
             // Valid character
-            sControlledBy = charSheet.get("controlledby")
-            representsName = charSheet.get("name")
+            sControlledBy = charSheet.get("controlledby");
+            representsName = charSheet.get("name");
             // strConditioned = representsName.toLowerCase()
             if (sControlledBy != "") {
                 // Controlled by one or more player
