@@ -8,8 +8,7 @@ let blodiedOrDeadReady = false;
 
 on('ready', function () {
 
-
-    let currentVersion = "0.2.22",
+    const currentVersion = "0.2.22",
         lastUpdate = 2011110900;
     
     log('BloodiedOrDead Install Info: v' + currentVersion + ' Last Update: ' + lastUpdate);
@@ -19,7 +18,6 @@ on('ready', function () {
 });
 
 on("change:graphic", function (obj, prev) {
-
 
     // Don't run it 'ready' event hasn't fired
     if (!blodiedOrDeadReady) {
