@@ -8,8 +8,8 @@ let blodiedOrDeadReady = false;
 
 on('ready', function () {
 
-    const currentVersion = "1.0.5",
-        lastUpdate = 2011130800;
+    const currentVersion = "1.0.9",
+        lastUpdate = 2011131000;
     
     log('BloodiedOrDead Install Info: v' + currentVersion + ' Last Update: ' + lastUpdate);
     
@@ -19,11 +19,16 @@ on('ready', function () {
 
 on("change:graphic", function (obj, prev) {
 
+    // sendChat('DEBUG INFO', 'Event Triggered: ' + Date.now());
+    
     // Don't run it 'ready' event hasn't fired
     if (!blodiedOrDeadReady) {
         log('WARNING', 'Change event triggered before ready event. EXITING BloodiedOrDead.');
         return;
     }
+    
+    // first, if it's not a token, then do nothing
+    if (obj.get("_subtype") != "token") return;
     
     let importantChar,
         hpValue,
@@ -42,15 +47,13 @@ on("change:graphic", function (obj, prev) {
         representsName,
         strConditioned;
 
-    // sendChat('DEBUG INFO', 'Event Triggered: ' + Date.now());
-
     hpValue = obj.get("bar1_value");
     if (isNaN(hpValue)) return;
     hpMax = obj.get("bar1_max");
     if (isNaN(hpMax)) return;
     if (hpMax <= 0) return;
     
-    sendChat('ADDED OBJECT?', 'prev.bar1_Vale: ' + prev.bar1_value + ' prev.bar1_max: ' + prev.bar1_max);
+    // sendChat('prev values check', 'prev.bar1_Vale: ' + prev.bar1_value + ' prev.bar1_max: ' + prev.bar1_max);
     if (hpValue === prev.bar1_value && hpMax === prev.bar1_max) {
         // sendChat('SCRIPT INFO', 'No change in health bar, nothing to see here...');
         return;
@@ -58,23 +61,31 @@ on("change:graphic", function (obj, prev) {
 
     // Is this a token the players care about? If not, we don't want to spam chat.
     importantChar = false;
-    sControlledBy = obj.get("controlledby");
+    // First, does the graphic represemt a character
     tokenRepresents = obj.get("represents");
-    if (sControlledBy !== undefined && sControlledBy !== "") {
-        importantChar = true;   // Controlled by one or more players
-    } else if (tokenRepresents !== undefined && tokenRepresents !== "") {
+    if (tokenRepresents !== undefined && tokenRepresents !== "") {
+        // Yes it does so get the character object
         charSheet = getObj('character', tokenRepresents);
-        if (charSheet !== undefined) {
-            representsName = charSheet.get("name");
-            if (representsName !== undefined && representsName !== "") {
-                // sendChat('DEBUG INFO', 'tokenRepresents a character sheet with the name:' + representsName + '.');
-                strConditioned = representsName.toLowerCase();
-                if (strConditioned.indexOf("sidekick") >= 0 || strConditioned.indexOf("henchman") >= 0) {
-                    // sendChat('DEBUG INFO', 'The NPC is a Sidekick or Henchman.');
-                    importantChar = true;
-                }
+        if (charSheet != undefined) {
+            // Valid character
+            sControlledBy = charSheet.get("controlledby")
+            representsName = charSheet.get("name")
+            strConditioned = representsName.toLowerCase()
+            if (sControlledBy != "") {
+                // Controlled by one or more player
+                importantChar = true;
+            } else if (strConditioned.indexOf("sidekick") >= 0 || strConditioned.indexOf("henchman") >= 0) {
+                // Character is a Sidekick or Henchmane
+                importantChar = true;
             }
         }
+    } else {
+        // No, token does not represent a character, so just check if it's controlled by any players
+         sControlledBy = obj.get("controlledby");
+         if (sControlledBy != "") {
+             // Controlled by one or more characters
+             importantChar = true;
+         }
     }
 
     currentStatusMarkerString = (obj.get("statusmarkers")).trim();  // THIS WORKS!!
