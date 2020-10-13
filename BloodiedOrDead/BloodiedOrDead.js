@@ -8,8 +8,8 @@ let blodiedOrDeadReady = false;
 
 on('ready', function () {
 
-    const currentVersion = "1.0.3",
-        lastUpdate = 2011130600;
+    const currentVersion = "1.0.5",
+        lastUpdate = 2011130800;
     
     log('BloodiedOrDead Install Info: v' + currentVersion + ' Last Update: ' + lastUpdate);
     
@@ -49,6 +49,8 @@ on("change:graphic", function (obj, prev) {
     hpMax = obj.get("bar1_max");
     if (isNaN(hpMax)) return;
     if (hpMax <= 0) return;
+    
+    sendChat('ADDED OBJECT?', 'prev.bar1_Vale: ' + prev.bar1_value + ' prev.bar1_max: ' + prev.bar1_max);
     if (hpValue === prev.bar1_value && hpMax === prev.bar1_max) {
         // sendChat('SCRIPT INFO', 'No change in health bar, nothing to see here...');
         return;
