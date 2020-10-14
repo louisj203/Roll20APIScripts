@@ -7,14 +7,11 @@
 let bloodiedOrDeadReady = false;
 
 on('ready', function () {
-
-    const currentVersion = "1.0.12",
-        lastUpdate = new (Date);
+    const currentVersion = "0.1.15",
+          lastUpdate = "10/14/2020";
     
     log('BloodiedOrDead Install Info: v' + currentVersion + ' Last Update: ' + lastUpdate);
-    
     bloodiedOrDeadReady = true;
-    
 });
 
 on("change:graphic", function (obj, prev) {
@@ -39,11 +36,10 @@ on("change:graphic", function (obj, prev) {
         tokenName, tokenRepresents,
         charSheet,
         representsName;
-        // strConditioned;
 
-    hpValue = parseInt(obj.get("bar1_value"),10);
-    hpMax = parseInt(obj.get("bar1_max"),10);
-    hpPrev = prev["bar1_value"];
+    hpValue = parseInt(obj.get("bar1_value"), 10);
+    hpMax = parseInt(obj.get("bar1_max"), 10);
+    hpPrev = parseInt(prev["bar1_value"], 10);
     if (isNaN(hpValue) || isNaN(hpMax) || isNaN(hpPrev) || hpValue == hpPrev) return;
 
     // Is this a token the players care about? If not, we don't want to spam chat.
@@ -57,8 +53,7 @@ on("change:graphic", function (obj, prev) {
             // Valid character
             sControlledBy = charSheet.get("controlledby");
             representsName = charSheet.get("name");
-            // strConditioned = representsName.toLowerCase()
-            if (sControlledBy != "") {
+            if (sControlledBy !== "") {
                 // Controlled by one or more player
                 importantChar = true;
             } else if ((representsName.toLowerCase()).indexOf("sidekick") >= 0 || (representsName.toLowerCase()).indexOf("henchman") >= 0) {
@@ -69,8 +64,10 @@ on("change:graphic", function (obj, prev) {
     } else {
         // No, token does not represent a character, so just check if it's controlled by any players
          sControlledBy = obj.get("controlledby");
-         if (sControlledBy != "") {
+         // sendChat('Contolling Player(s):', 'Non-character token, controlled by: [' + (sControlledBy === "" ? 'GM ONLY' : sControlledBy) + ']');
+         if (sControlledBy !== "") {
              // Controlled by one or more characters
+             representsName = obj.get("name");
              importantChar = true;
          }
     }
